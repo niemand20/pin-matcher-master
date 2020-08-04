@@ -12,47 +12,111 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="pin-generator half-width">
-                    <input class="form-control" type="text">
-                    <button class="generate-btn">Generate Pin</button>
+                    <input id="formControl" class="form-control" type="text">
+                    <button id="generateBtn" class="generate-btn">Generate Pin</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-section half-width">
-                    <input class="form-control" type="text">
+                    <input id="numPadDisplay" class="form-control" type="text">
                     <div class="numbers">
                         <div class="calc-body">
                             <div class="calc-button-row">
-                              <div class="button">7</div>
-                              <div class="button">8</div>
-                              <div class="button">9</div>
+                              <div class="button" onclick="valueAssign(7)">7</div>
+                              <div class="button" onclick="valueAssign(8)">8</div>
+                              <div class="button" onclick="valueAssign(9)">9</div>
                             </div>
                             <div class="calc-button-row">
-                              <div class="button">4</div>
-                              <div class="button">5</div>
-                              <div class="button">6</div>
+                              <div class="button" onclick="valueAssign(4)">4</div>
+                              <div class="button" onclick="valueAssign(5)">5</div>
+                              <div class="button" onclick="valueAssign(6)">6</div>
                             </div>
                             <div class="calc-button-row">
-                              <div class="button">1</div>
-                              <div class="button">2</div>
-                              <div class="button">3</div>
+                              <div class="button" onclick="valueAssign(1)">1</div>
+                              <div class="button" onclick="valueAssign(2)">2</div>
+                              <div class="button" onclick="valueAssign(3)">3</div>
                             </div>
                             <div class="calc-button-row">
-                                <div class="button"><</div>
-                                <div class="button">0</div>
-                                <div class="button">C</div>
+                                <div class="button" onclick="insert('<')"><</div>
+                                <div class="button" onclick="valueAssign(0)">0</div>
+                                <div class="button" onclick="insert('C')">C</div>
                             </div>
                             <div>
-                                <button type="submit" class="submit-btn">Submit</button>
-                                <p class="action-left">3 try left</p>
+                                <button id="submitBtn" type="submit" class="submit-btn" onclick="submitOutput(); clickCount()">Submit</button>
+                                <p id="actionsLeft" class="action-left">3 try left</p>
                             </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="notify-section">
-            <p class="notify">❌ Pin Didn't Match, Please try again</p>
-            <p class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            <p id="wrongPin" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="rightPin" class="notify">✅ Pin Matched... Secret door is opening for you</p>
         </div>
     </div>
 </body>
+
+
+<script>
+    
+    // Generating random number
+    const generateBtn = document.getElementById("generateBtn");
+    generateBtn.addEventListener("click", function(){
+        document.getElementById("formControl").value = Math.floor(Math.random() * 9000) + 1000;
+        document.getElementById("rightPin").style.display="none";
+        document.getElementById("wrongPin").style.display="none";
+        document.getElementById("numPadDisplay").value = ""
+    })
+
+    // Showing digits in number pad display
+    function valueAssign(digit){
+        var numPadDisplay = document.getElementById("numPadDisplay").value;
+        var multiDigitView = numPadDisplay + digit;
+        document.getElementById("numPadDisplay").value = multiDigitView;
+        console.log(multiDigitView);
+    }
+
+    // Making clear and backspace button workable
+    function insert(sign){
+        if(sign == '<'){
+            var numPadDisplay = document.getElementById("numPadDisplay").value;
+            var reduceNum = numPadDisplay.substring(0, numberPadDisplay.length - 1);
+            document.getElementById("numPadDisplay").value = reduceNum;
+        }else{
+            document.getElementById("numPadDisplay").value = "";
+        }
+    }
+
+    // Equality check output of two display
+    function submitOutput(){
+        var formControl = document.getElementById("formControl").value;
+        var numPadDisplay = document.getElementById("numPadDisplay").value;
+        document.getElementById("formControl").value = "";
+        if(formControl == numPadDisplay){
+            document.getElementById("rightPin").style.display="block";
+        }else{
+            document.getElementById("wrongPin").style.display="block";
+        }
+    }
+
+    // Action left counter
+    var count = 0;
+    function clickCount(){
+        count += 1;
+        console.log("Counting");
+        if(count == 0){
+            document.getElementById("actionsLeft").innerText = "3 try left";
+        }else if(count == 1){
+            document.getElementById("actionsLeft").innerText = "2 try left";
+        }else if(count == 2){
+            document.getElementById("actionsLeft").innerText = "1 try left";
+        }else{
+            document.getElementById("actionsLeft").innerText = "";
+            document.getElementById("submitBtn").disabled = true;
+            document.getElementById("submitBtn").style.backgroundColor ="cyan";
+        }
+    }
+
+</script>
+
 </html>
